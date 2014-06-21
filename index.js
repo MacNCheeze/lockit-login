@@ -119,7 +119,6 @@ Login.prototype.postLogin = function(req, res, next) {
   // check for valid inputs
   if (!login || !password) {
     error = 'Please enter your email/username and password';
-    login = login.toLowerCase();
 
     // send only JSON when REST is active
     if (config.rest) return res.json(403, {error: error});
@@ -135,6 +134,7 @@ Login.prototype.postLogin = function(req, res, next) {
     });
     return;
   }
+  var login = login.toLowerCase();
 
   // check if login is a name or an email address
 
@@ -148,7 +148,7 @@ Login.prototype.postLogin = function(req, res, next) {
 
     // no user or user email isn't verified yet -> render error message
     if (!user || !user.emailVerified) {
-      error = (!user.emailVerified) ? 'Email not verified' : 'Invalid user or password';
+      error = (user && !user.emailVerified) ? 'Email not verified' : 'Invalid user or password';
 
       // send only JSON when REST is active
       if (config.rest) return res.json(403, {error: error});
